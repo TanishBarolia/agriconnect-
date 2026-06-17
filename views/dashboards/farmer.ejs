@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+</head>
+<body>
+
+    <%- include('../partials/header', { user: user }) %>
+    <%- include('../partials/navbar') %>
+
+    <div class="panel-row">
+        <div class="panel">
+            <h3><i class="fas fa-cloud-sun"></i> Current Weather</h3>
+            <% if (weather.ok) { %>
+                <div class="weather-temp"><%= weather.data.tempC %>°C</div>
+                <div class="weather-desc"><%= weather.data.description %> in <%= weather.data.city %><%= weather.data.country ? ', ' + weather.data.country : '' %></div>
+                <div class="weather-meta">
+                    <span><i class="fas fa-tint"></i> <%= weather.data.humidity %>% humidity</span>
+                    <% if (weather.data.windSpeed !== null) { %>
+                        <span><i class="fas fa-wind"></i> <%= weather.data.windSpeed %> m/s</span>
+                    <% } %>
+                </div>
+            <% } else { %>
+                <div class="error-banner"><%= weather.error %></div>
+            <% } %>
+            <form method="GET" style="margin-top:14px; display:flex; gap:8px;">
+                <input type="text" name="city" placeholder="e.g. Mysuru,IN" value="<%= selectedCity %>" style="flex:1; padding:8px 10px; border:1px solid #ddd; border-radius:6px;">
+                <button type="submit" style="background:#2e7d32; color:#fff; border:none; padding:8px 14px; border-radius:6px; cursor:pointer;">Update</button>
+            </form>
+        </div>
+
+        <div class="panel">
+            <h3><i class="fas fa-seedling"></i> Crop Suggestions</h3>
+            <% if (cropAdvice) { %>
+                <span class="crop-season-tag"><%= cropAdvice.season %> Season</span>
+                <% cropAdvice.suggestions.forEach(function(s) { %>
+                    <div class="crop-suggestion-block">
+                        <div class="crop-chip-row">
+                            <% s.crops.forEach(function(crop) { %>
+                                <span class="crop-chip"><%= crop %></span>
+                            <% }) %>
+                        </div>
+                        <div class="crop-reason"><%= s.reason %></div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="empty-state">Crop suggestions need current weather data. Update your city above to see recommendations.</div>
+            <% } %>
+        </div>
+    </div>
+
+    <main class="product-section">
+        <h2>Live Mandi Prices</h2>
+        <p class="section-subtitle">Sourced from the Government of India's Agmarknet (data.gov.in) — updated daily by mandi staff.</p>
+
+        <form method="GET" class="filter-form">
+            <input type="hidden" name="city" value="<%= selectedCity %>">
+            <select name="state">
+                <option value="">All States</option>
+                <% states.forEach(function(s) { %>
+                    <option value="<%= s %>" <%= s === selectedState ? 'selected' : '' %>><%= s %></option>
+                <% }) %>
+            </select>
+            <select name="commodity">
+                <option value="">All Commodities</option>
+                <% commodities.forEach(function(c) { %>
+                    <option value="<%= c %>" <%= c === selectedCommodity ? 'selected' : '' %>><%= c %></option>
+                <% }) %>
+            </select>
+            <button type="submit">Filter</button>
+        </form>
+
+        <% if (mandi.source === 'error') { %>
+            <div class="error-banner"><%= mandi.error %></div>
+        <% } else if (mandi.records.length === 0) { %>
+            <div class="empty-state">No records found for this filter. Try a different state or commodity.</div>
+        <% } else { %>
+            <div style="overflow-x:auto;">
+                <table class="mandi-table">
+                    <thead>
+                        <tr>
+                            <th>State</th>
+                            <th>Market</th>
+                            <th>Commodity</th>
+                            <th>Variety</th>
+                            <th>Min Price (₹/quintal)</th>
+                            <th>Max Price (₹/quintal)</th>
+                            <th>Modal Price (₹/quintal)</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% mandi.records.forEach(function(r) { %>
+                            <tr>
+                                <td><%= r.state %></td>
+                                <td><%= r.market %></td>
+                                <td><%= r.commodity %></td>
+                                <td><%= r.variety %></td>
+                                <td><%= r.min_price %></td>
+                                <td><%= r.max_price %></td>
+                                <td><%= r.modal_price %></td>
+                                <td><%= r.arrival_date %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+    </main>
+
+    <%- include('../partials/loginModal') %>
+
+</body>
+</html>

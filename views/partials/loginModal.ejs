@@ -1,0 +1,33 @@
+<div id="loginModal" class="modal-overlay">
+    <div class="modal-box">
+        <span class="close-btn" onclick="closeLoginModal()">&times;</span>
+        <h2>Login to AgriConnect</h2>
+        <p>Access live prices, government schemes, and direct sourcing.</p>
+        
+        <a href="/auth/google" class="google-login-btn">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google Logo" class="google-icon">
+            Continue with Google
+        </a>
+        
+        <p class="terms">By continuing, you agree to our Terms & Privacy Policy.</p>
+    </div>
+</div>
+
+<script>
+    // Modal Logic
+    function openLoginModal() {
+        document.getElementById('loginModal').style.display = 'flex';
+    }
+
+    function closeLoginModal() {
+        document.getElementById('loginModal').style.display = 'none';
+    }
+
+    // Close modal if user clicks outside of the box
+    window.onclick = function(event) {
+        let modal = document.getElementById('loginModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>

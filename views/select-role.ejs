@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+</head>
+<body>
+    <%- include('partials/header', { user: user }) %>
+
+    <div class="role-select-wrap">
+        <h1>Welcome, <%= user.name.split(' ')[0] %> 👋</h1>
+        <p>Tell us how you'll use AgriConnect. You can't change this later without contacting support.</p>
+
+        <form action="/select-role" method="POST" class="role-grid" id="roleForm">
+            <label class="role-card">
+                <input type="radio" name="role" value="farmer" style="display:none;" onclick="this.form.submit()">
+                <i class="fas fa-tractor"></i>
+                <span>Farmer</span>
+            </label>
+            <label class="role-card">
+                <input type="radio" name="role" value="seller" style="display:none;" onclick="this.form.submit()">
+                <i class="fas fa-store"></i>
+                <span>Seller</span>
+            </label>
+            <label class="role-card">
+                <input type="radio" name="role" value="worker" style="display:none;" onclick="this.form.submit()">
+                <i class="fas fa-people-carry"></i>
+                <span>Worker</span>
+            </label>
+            <label class="role-card">
+                <input type="radio" name="role" value="wholesaler" style="display:none;" onclick="this.form.submit()">
+                <i class="fas fa-warehouse"></i>
+                <span>Wholesaler</span>
+            </label>
+        </form>
+    </div>
+</body>
+</html>

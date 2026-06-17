@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title>Wholesaler Dashboard | AgriConnect</title>
+</head>
+<body>
+    <%- include('../partials/header', { user: user }) %>
+
+    <main class="product-section">
+        <h2><i class="fas fa-warehouse" style="color:#6a1b9a;"></i> <%= businessName %></h2>
+        <p class="section-subtitle">Cross-market wholesale price comparison from Agmarknet — identify the best markets to source from.</p>
+
+        <form method="GET" class="filter-form">
+            <select name="state">
+                <option value="">All States</option>
+                <% states.forEach(function(s) { %>
+                    <option value="<%= s %>" <%= s === selectedState ? 'selected' : '' %>><%= s %></option>
+                <% }) %>
+            </select>
+            <select name="commodity">
+                <option value="">All Commodities</option>
+                <% commodities.forEach(function(c) { %>
+                    <option value="<%= c %>" <%= c === selectedCommodity ? 'selected' : '' %>><%= c %></option>
+                <% }) %>
+            </select>
+            <button type="submit">Filter</button>
+        </form>
+
+        <% if (mandi.source === 'error') { %>
+            <div class="error-banner"><%= mandi.error %></div>
+        <% } else if (mandi.records.length === 0) { %>
+            <div class="empty-state">No records found. Try a broader filter — bulk sourcing decisions need a wider market view.</div>
+        <% } else { %>
+            <div style="overflow-x:auto;">
+                <table class="mandi-table">
+                    <thead>
+                        <tr>
+                            <th>State</th>
+                            <th>District</th>
+                            <th>Market</th>
+                            <th>Commodity</th>
+                            <th>Variety</th>
+                            <th>Min Price (₹/quintal)</th>
+                            <th>Max Price (₹/quintal)</th>
+                            <th>Modal Price (₹/quintal)</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% mandi.records.forEach(function(r) { %>
+                            <tr>
+                                <td><%= r.state %></td>
+                                <td><%= r.district %></td>
+                                <td><%= r.market %></td>
+                                <td><%= r.commodity %></td>
+                                <td><%= r.variety %></td>
+                                <td><%= r.min_price %></td>
+                                <td><%= r.max_price %></td>
+                                <td><%= r.modal_price %></td>
+                                <td><%= r.arrival_date %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+    </main>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title>Worker Dashboard | AgriConnect</title>
+</head>
+<body>
+    <%- include('../partials/header', { user: user }) %>
+
+    <main class="product-section">
+        <h2><i class="fas fa-people-carry" style="color:#1565c0;"></i> Available Farm Jobs</h2>
+        <p class="section-subtitle">Seasonal and daily labor opportunities posted by farmers and sellers near you.</p>
+
+        <% jobs.forEach(function(job) { %>
+            <div class="job-card">
+                <div>
+                    <h4><%= job.title %></h4>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> <%= job.location %></span>
+                        <span><i class="fas fa-calendar-days"></i> <%= job.duration %></span>
+                        <span><i class="fas fa-building"></i> <%= job.postedBy %></span>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:16px;">
+                    <span class="job-wage"><%= job.wage %></span>
+                    <button class="apply-btn">Apply</button>
+                </div>
+            </div>
+        <% }) %>
+
+        <% if (jobs.length === 0) { %>
+            <div class="empty-state">No job postings right now. Check back soon.</div>
+        <% } %>
+    </main>
+</body>
+</html>

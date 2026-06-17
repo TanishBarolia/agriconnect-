@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Dashboard - <%= storeName %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <nav class="bg-green-800 text-white p-4 shadow-md sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/" class="text-xl font-bold flex items-center gap-2 text-white no-underline">
+                <i class="fa-solid fa-store"></i> AgriConnect Seller Hub
+            </a>
+            <div class="flex items-center gap-6">
+                <a href="#" class="hover:text-green-200 transition"><i class="fa-solid fa-chart-line mr-1"></i> Reports</a>
+                <a href="#" class="hover:text-green-200 transition"><i class="fa-solid fa-truck mr-1"></i> Orders</a>
+                <div class="flex items-center gap-2 bg-green-900 px-3 py-1 rounded-full border border-green-700">
+                    <i class="fa-solid fa-user-circle"></i>
+                    <span class="text-sm"><%= storeName %></span>
+                </div>
+                <a href="/logout" class="hover:text-green-200 transition text-sm"><i class="fa-solid fa-sign-out-alt mr-1"></i> Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-6">
+
+        <div class="mb-8 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">Store Overview</h1>
+                <p class="text-gray-500 text-sm">Monitor your sales and manage your agricultural inventory.</p>
+            </div>
+            <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow flex items-center gap-2 transition">
+                <i class="fa-solid fa-plus"></i> Add New Product
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 font-medium uppercase tracking-wide">Monthly Revenue</p>
+                    <h3 class="text-xl font-bold text-gray-800"><%= metrics.revenueThisMonth %></h3>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 font-medium uppercase tracking-wide">Pending Orders</p>
+                    <h3 class="text-xl font-bold text-gray-800"><%= metrics.pendingOrders %></h3>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 font-medium uppercase tracking-wide">Active Catalog</p>
+                    <h3 class="text-xl font-bold text-gray-800"><%= metrics.totalProducts %> Items</h3>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 font-medium uppercase tracking-wide">Low Stock Alerts</p>
+                    <h3 class="text-xl font-bold text-red-600"><%= metrics.lowStockAlerts %> Needs refill</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+            <div class="p-5 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+                <h2 class="font-bold text-gray-700">Product Inventory Manager</h2>
+                <div class="relative">
+                    <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400"></i>
+                    <input type="text" placeholder="Search product ID or name..." class="pl-10 pr-4 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:border-green-500 w-64">
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-white border-b border-gray-200 text-gray-500 text-xs uppercase tracking-wider">
+                            <th class="p-4 font-semibold">Product ID & Name</th>
+                            <th class="p-4 font-semibold">Category</th>
+                            <th class="p-4 font-semibold">Selling Price</th>
+                            <th class="p-4 font-semibold">Stock Level</th>
+                            <th class="p-4 font-semibold text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-sm">
+                        <% inventory.forEach(function(item) { %>
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="p-4">
+                                    <div class="text-xs text-gray-400 mb-1"><%= item.id %></div>
+                                    <div class="font-bold text-gray-800"><%= item.name %></div>
+                                </td>
+                                <td class="p-4 text-gray-600"><%= item.category %></td>
+                                <td class="p-4 font-medium text-gray-800">₹<%= item.price %></td>
+                                <td class="p-4">
+                                    <% if (item.status === 'Active') { %>
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold border border-green-200">
+                                            <%= item.stock %> in stock
+                                        </span>
+                                    <% } else if (item.status === 'Low Stock') { %>
+                                        <span class="px-2 py-1 bg-orange-100 text-orange-700 rounded text-xs font-bold border border-orange-200">
+                                            Only <%= item.stock %> left
+                                        </span>
+                                    <% } else { %>
+                                        <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-bold border border-red-200">
+                                            Out of Stock
+                                        </span>
+                                    <% } %>
+                                </td>
+                                <td class="p-4 text-right">
+                                    <button class="text-gray-400 hover:text-blue-600 mr-3 transition" title="Edit Product"><i class="fa-solid fa-pen"></i></button>
+                                    <button class="text-gray-400 hover:text-red-600 transition" title="Delete Product"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-5 border-b border-gray-200 bg-gray-50">
+                <h2 class="font-bold text-gray-700"><i class="fa-solid fa-chart-simple mr-2 text-green-600"></i>Mandi Price Reference (Agmarknet)</h2>
+                <p class="text-xs text-gray-500 mt-1">Use this to benchmark your selling prices against current wholesale mandi rates.</p>
+            </div>
+            <div class="p-5">
+                <form method="GET" class="flex gap-3 flex-wrap mb-4">
+                    <select name="state" class="border border-gray-300 rounded px-3 py-2 text-sm">
+                        <option value="">All States</option>
+                        <% states.forEach(function(s) { %>
+                            <option value="<%= s %>" <%= s === selectedState ? 'selected' : '' %>><%= s %></option>
+                        <% }) %>
+                    </select>
+                    <select name="commodity" class="border border-gray-300 rounded px-3 py-2 text-sm">
+                        <option value="">All Commodities</option>
+                        <% commodities.forEach(function(c) { %>
+                            <option value="<%= c %>" <%= c === selectedCommodity ? 'selected' : '' %>><%= c %></option>
+                        <% }) %>
+                    </select>
+                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-semibold">Filter</button>
+                </form>
+
+                <% if (mandi.source === 'error') { %>
+                    <div class="bg-red-50 border border-red-200 text-red-700 text-sm rounded p-3"><%= mandi.error %></div>
+                <% } else if (mandi.records.length === 0) { %>
+                    <div class="text-center text-gray-400 text-sm py-8">No mandi records found for this filter.</div>
+                <% } else { %>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm border-collapse">
+                            <thead>
+                                <tr class="text-gray-500 text-xs uppercase border-b border-gray-200">
+                                    <th class="p-3">State</th>
+                                    <th class="p-3">Market</th>
+                                    <th class="p-3">Commodity</th>
+                                    <th class="p-3">Min ₹</th>
+                                    <th class="p-3">Max ₹</th>
+                                    <th class="p-3">Modal ₹</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <% mandi.records.forEach(function(r) { %>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="p-3"><%= r.state %></td>
+                                        <td class="p-3"><%= r.market %></td>
+                                        <td class="p-3"><%= r.commodity %></td>
+                                        <td class="p-3"><%= r.min_price %></td>
+                                        <td class="p-3"><%= r.max_price %></td>
+                                        <td class="p-3 font-semibold"><%= r.modal_price %></td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
